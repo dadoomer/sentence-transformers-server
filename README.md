@@ -6,13 +6,24 @@ and [sbert](https://www.sbert.net/) as the embedding library.
 
 ## Installation
 
-Install the dependencies in [pyproject.toml](pyproject.toml) and you are good
-to go: `python server.py --port 3000 --model all-MiniLM-L6-v2`.
-
-Assuming you have Python3.9 or above and [poetry](https://python-poetry.org/)
-you can do this in a virtual environment automatically with:
+### Without poetry
 
 ```
+git clone https://gitlab.com/da_doomer/sentence-transformers-server.git
+cd sentence-transformers-server
+pip install -U bottle
+pip install -U sentence-transformers
+python server.py --port 3000 --model all-MiniLM-L6-v2
+```
+
+### With poetry
+
+If you have [poetry](https://python-poetry.org/) you can configure a virtual
+environment automatically:
+
+```
+git clone https://gitlab.com/da_doomer/sentence-transformers-server.git
+cd sentence-transformers-server
 poetry install
 poetry shell
 python server.py --port 3000 --model all-MiniLM-L6-v2
@@ -26,12 +37,6 @@ python server.py --port PORT_N --model MODEL_ID
 
 See the [list of models](https://www.sbert.net/docs/pretrained_models.html)
 available in sbert.
-
-And that's it, the server is live!
-
-Note: naturally you need to set-up the network environment for accessing the
-server from the Internet (e.g. port-forwarding in your router, a reverse proxy
-like Nginx or Apache, etc.).
 
 ### Semantic search
 
