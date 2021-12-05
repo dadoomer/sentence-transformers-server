@@ -12,7 +12,7 @@ mirror](https://github.com/dadoomer/sentence-transformers-server).
 
 ### Without poetry
 
-```
+```bash
 git clone https://gitlab.com/da_doomer/sentence-transformers-server.git
 cd sentence-transformers-server
 pip install -U bottle
@@ -25,7 +25,7 @@ python server.py --port 3000 --model all-MiniLM-L6-v2
 If you have [poetry](https://python-poetry.org/) you can configure a virtual
 environment automatically:
 
-```
+```bash
 git clone https://gitlab.com/da_doomer/sentence-transformers-server.git
 cd sentence-transformers-server
 poetry install
@@ -35,7 +35,7 @@ python server.py --port 3000 --model all-MiniLM-L6-v2
 
 ## Use
 
-```
+```bash
 python server.py --port PORT_N --model MODEL_ID
 ```
 
@@ -55,6 +55,7 @@ following body structure:
 		"craft stick",
 		"place stick"
 	]
+}
 ```
 
 The response is of type `application/json` and contains the similarity of the
