@@ -1,7 +1,7 @@
 # sentence-transformers-server
 
-Single file NLP API server endpoint to perform operations like semantic search
-and sentence embedding. This uses [bottle](https://bottlepy.org/) as a server
+Single-file Natural-Language-Processing API server to perform semantic search
+and sentence embedding. This uses [bottle](https://bottlepy.org/) as the server
 and [sbert](https://www.sbert.net/) as the embedding library.
 
 Visit the [official Gitlab
