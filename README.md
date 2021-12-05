@@ -4,6 +4,10 @@ Single file NLP API server endpoint to perform operations like semantic search
 and sentence embedding. This uses [bottle](https://bottlepy.org/) as a server
 and [sbert](https://www.sbert.net/) as the embedding library.
 
+Visit the [official Gitlab
+repo](https://gitlab.com/da_doomer/sentence-transformers-server) or the [Github
+mirror](https://github.com/dadoomer/sentence-transformers-server).
+
 ## Installation
 
 ### Without poetry
@@ -81,9 +85,9 @@ following structure:
 }
 ```
 
-The response is of type `application/json` and contains a list of numbers
-representing a vector of norm 1 which can be used with dot-product,
-cosine-similarity of Euclidean distance:
+The response is of type `application/json` and contains for each document
+a list of numbers representing a vector of norm 1 which can be used with
+dot-product, cosine-similarity of Euclidean distance:
 
 ```JSON
 {
