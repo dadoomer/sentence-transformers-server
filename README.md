@@ -1,59 +1,91 @@
 # sentence-transformers-server
 
-Your own API endpoint to perform NLP functions like semantic search, sentence
-embedding, etc. This uses [bottle](https://bottlepy.org/) as a server and
-[sbert](https://www.sbert.net/) as the embedding library.
+Single file NLP API server endpoint to perform operations like semantic search
+and sentence embedding. This uses [bottle](https://bottlepy.org/) as a server
+and [sbert](https://www.sbert.net/) as the embedding library.
 
-## Installation instructions
+## Installation
 
 Install the dependencies in [pyproject.toml](pyproject.toml) and you are good
-to go: `python server.py --port 3000`.
+to go: `python server.py --port 3000 --model all-MiniLM-L6-v2`.
 
-Assuming you have Python3.9 or above and
-[poetry](https://python-poetry.org/) you can do this automatically with:
+Assuming you have Python3.9 or above and [poetry](https://python-poetry.org/)
+you can do this in a virtual environment automatically with:
 
 ```
 poetry install
 poetry shell
-python server.py --port 3000
+python server.py --port 3000 --model all-MiniLM-L6-v2
 ```
 
 ## Use
 
+```
+python server.py --port PORT_N --model MODEL_ID
+```
+
+See the [list of models](https://www.sbert.net/docs/pretrained_models.html)
+available in sbert.
+
+And that's it, the server is live!
+
+Note: naturally you need to set-up the network environment for accessing the
+server from the Internet (e.g. port-forwarding in your router, a reverse proxy
+like Nginx or Apache, etc.).
+
 ### Semantic search
 
-Send a POST request with the following structure:
+Send a POST request to `/semantic_search` of type `application/json` and the
+following body structure:
 
 ```JSON
 {
-	"query": "this is my query in natural language",
+	"query": "make stick",
 	"documents": [
-		"sentence 1 to compare against",
-		"another sentence",
-		"just one more as an example,
+		"place wooden plank at 2 comma 2",
+		"craft stick",
+		"place stick"
 	]
 ```
 
-The returned value is a list of numbers, each number the computed similarity
-of the query to the corresponding document.
-
-### Sentence embedding
-
-TODO (pull requests accepted).
-
-Send a POST request with the following structure:
+The response is of type `application/json` and contains the similarity of the
+query to the corresponding document:
 
 ```JSON
 {
-	"query": "this is my query in natural language",
+	"similarities": [
+		0.23651659488677979,
+		0.7974543571472168,
+		0.5554141402244568
+	]
 }
 ```
 
-The returned value is a list of numbers representing a vector
-of norm 1 which can be used with dot-product, cosine-similarity of
-Euclidean distance.
+### Sentence embedding
 
-## Using other models
+Send a POST request to `/embedding` of type `application/json` and the
+following structure:
 
-Simply modify the code to select a different model. TODO: add
-this functionality as an argument to `server.py` (pull requests accepted).
+```JSON
+{
+	"documents": [
+		"place wooden plank at 2 comma 2",
+		"craft stick",
+		"place stick"
+	]
+}
+```
+
+The response is of type `application/json` and contains a list of numbers
+representing a vector of norm 1 which can be used with dot-product,
+cosine-similarity of Euclidean distance:
+
+```JSON
+{
+	"embeddings": [
+		[...],
+		[...],
+		[...]
+	]
+}
+```
