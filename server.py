@@ -2,6 +2,8 @@
 import bottle
 from sentence_transformers import SentenceTransformer
 from sentence_transformers import util
+from functools import lru_cache
+import typing
 import argparse
 
 parser = argparse.ArgumentParser(description="Start an NLP server.")
@@ -16,6 +18,12 @@ parser.add_argument(
         type=str,
         help="Transformer model ID",
         required=True,
+    )
+parser.add_argument(
+        "--embed_cache_size",
+        type=int,
+        help="Cache size for sentence embeddings",
+        default=2048,
     )
 args = parser.parse_args()
 
@@ -43,12 +51,19 @@ def enable_cors():
     bottle.response.set_header('Access-Control-Allow-Headers', 'content-type')
 
 
+@lru_cache(maxsize=args.embed_cache_size)
+def no_batch_embed(sentence: str) -> typing.List[float]:
+    """Returns a list with the numbers of the vector into which the
+    model embedded the string."""
+    return model.encode(sentence).tolist()
+
+
 @bottle.post('/embedding')
 def embedding():
     """Returns `{'embeddings': v}` where `v` is a list of vectors with the
     embeddings of each document in `documents`."""
     documents = bottle.request.json["documents"]
-    embeddings = model.encode(documents)
+    embeddings = [no_batch_embed(document) for document in documents]
     return {"embeddings": embeddings.tolist()}
 
 
@@ -58,8 +73,8 @@ def semantic_search():
     similarities of `query` to each document in `documents`."""
     query = bottle.request.json["query"]
     documents = bottle.request.json["documents"]
-    query_embedding = model.encode(query)
-    document_embeddings = model.encode(documents)
+    query_embedding = no_batch_embed(query)
+    document_embeddings = [no_batch_embed(document) for document in documents]
     scores = util.dot_score(query_embedding, document_embeddings).squeeze()
     return {"similarities": [float(s) for s in scores]}
 
