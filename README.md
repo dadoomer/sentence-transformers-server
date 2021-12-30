@@ -8,6 +8,11 @@ Visit the [official Gitlab
 repo](https://gitlab.com/da_doomer/sentence-transformers-server) or the [Github
 mirror](https://github.com/dadoomer/sentence-transformers-server).
 
+## Demo
+
+Visit the [demo page](https://da_doomer.gitlab.io/sentence-transformers-server/) to confirm your server is
+reachable.
+
 ## Installation
 
 ### Without poetry
