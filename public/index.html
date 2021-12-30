@@ -18,12 +18,6 @@ input[type="text"] {width: 100%;}
 					documents,
 					api_url
 					) {
-				if(query.length == 0) {
-					let similarities = [];
-					for(const _ of documents)
-						similarities.push(0.0);
-					return similarities;
-				}
 				let data = {
 					query: query,
 					documents: documents,
