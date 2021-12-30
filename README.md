@@ -47,6 +47,8 @@ python server.py --port PORT_N --model MODEL_ID
 See the [list of models](https://www.sbert.net/docs/pretrained_models.html)
 available in sbert.
 
+See the provided [javascript example](public/index.html#L16).
+
 ### Semantic search
 
 Send a POST request to `/semantic_search` of type `application/json` and the
