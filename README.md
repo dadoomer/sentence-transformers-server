@@ -8,6 +8,11 @@ Visit the [official Gitlab
 repo](https://gitlab.com/da_doomer/sentence-transformers-server) or the [Github
 mirror](https://github.com/dadoomer/sentence-transformers-server).
 
+## Demo
+
+Visit the [demo page](https://da_doomer.gitlab.io/sentence-transformers-server/) to confirm your server is
+reachable.
+
 ## Installation
 
 ### Without poetry
@@ -41,6 +46,8 @@ python server.py --port PORT_N --model MODEL_ID
 
 See the [list of models](https://www.sbert.net/docs/pretrained_models.html)
 available in sbert.
+
+See the provided [javascript example](public/index.html#L16).
 
 ### Semantic search
 

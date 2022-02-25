@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<link rel="stylesheet" href="https://unpkg.com/axist@latest/dist/axist.min.css" />
+		<title>sentence-transformers-server</title>
+		<style>
+input[type="text"] {width: 100%;}
+.buttons { margin: auto; }
+		</style>
+		<script>
+			/*
+			 * Query the API endpoint to compute string similarity between `query` and
+			 * each string in `documents`.
+			 */
+			async function similarities(
+					query,
+					documents,
+					api_url
+					) {
+				let data = {
+					query: query,
+					documents: documents,
+				};
+				let response = await fetch(api_url, {
+					headers: { 'Content-Type': 'application/json' },
+					method: "POST", 
+					mode: "cors",
+					body: JSON.stringify(data)
+				});
+				let res = await response.json();
+				return res["similarities"];
+			}
+
+			/**
+			 * Add a text input to the form.
+			 */
+			function add_sentence() {
+				let input = document.createElement("input");
+				input.setAttribute('type', 'text');
+				input.setAttribute('placeholder', 'Another sentence');
+				document.getElementById("documents").appendChild(input);
+				return false;
+			}
+
+			/**
+			 * Extract the form values, query the API endpoint and fill the HTML.
+			 */
+			async function sentence_similarity() {
+				// Extract form values
+				let api_url = document.getElementById("endpoint").value;
+				let query = document.getElementById("query").value;
+				let documents = [];
+				for(const child of document.getElementById("documents").children)
+					documents.push(child.value);
+
+				// Get and normalize raw similarities (cosine similarities)
+				let values = await similarities(query, documents, api_url);
+				values = values.map((sim) => { return 100*(sim+1.0)/2.0; });
+
+				// Fill the HTML
+				document.getElementById("query_span").innerHTML = query;
+				document.getElementById("similarity_list").innerHTML = "";
+				for(let i = 0; i < documents.length; i++) {
+					let val = Math.round(values[i]*100)/100;
+					let text = "<b>" + val + "%</b>: " + documents[i];
+					let item = document.createElement("li");
+					item.innerHTML = text;
+					document.getElementById("similarity_list").appendChild(item);
+				}
+
+				// Show the hidden results div
+				document.getElementById("results").style.display = null;
+				document.getElementById("results").scrollIntoView();
+				return false;
+			}
+
+			// Set the default values
+			window.onload = function() {
+				document.getElementById("endpoint").value = "https://nlp.iamleo.space/semantic_search";
+				document.getElementById("query").value = "The world's entire scientific heritage is increasingly being digitized and locked up by a handful of private corporations.";
+				document.getElementById("doc1").value = "The Industrial Revolution and its consequences have been a disaster for the human race";
+				document.getElementById("doc2").value = "The founder of Sci-hub — unquestionably one of the most important sites for academics in the world — should not be subject to persecution for their work";
+				document.getElementById("doc3").value = "Parhippopsicon albicans is a species of beetle in the family Cerambycidae. It was described by Breuning in 1942";
+				document.getElementById("form").onsubmit = function(event) {
+					event.preventDefault();
+					sentence_similarity();
+					return false;
+				};
+			}
+		</script>
+	</head>
+	<body>
+		<main>
+			<h1>sentence-transformers-server demo</h1>
+
+			<p>Single-file Natural-Language-Processing API server to perform semantic
+			search and sentence embedding. Visit the <a
+			href="https://gitlab.com/da_doomer/sentence-transformers-server">official
+		Gitlab repo</a> (or the <a
+		href="https://github.com/dadoomer/sentence-transformers-server">Github
+		mirror</a>).</p>
+
+			<h2>Semantic search</h2>
+			Also known as "sentence similarity".
+
+			<form onsubmit="return false;" id="form">
+				<label for="endpoint">End-point:</label>
+				<input type="text" id="endpoint" name="endpoint" placeholder="nlp.iamleo.space" required>
+
+				<label for="query">Query:</label>
+				<input type="text" id="query" name="query" placeholder="Query sentence" required>
+
+				<label for="documents">Documents:</label>
+				<fieldset name="documents" id="documents">
+					<input type="text" id="doc1" name="doc1" placeholder="Another sentence">
+					<input type="text" id="doc2" name="doc2" placeholder="Another sentence">
+					<input type="text" id="doc3" name="doc3" placeholder="Another sentence">
+				</fieldset>
+				<div class="buttons">
+					<button onclick="return add_sentence()">+</button>
+					<input type="submit"/>
+				</div>
+			</form>
+
+			<div id="results" style="display: none;">
+				<h3>Results</h3>
+				<p><b>Query:</b> <span id="query_span"></p>
+				<p><b>Similarities:</b></p>
+				<ul id="similarity_list">
+				</ul>
+			</div>
+		</main>
+	</body>
+</html>
