@@ -64,7 +64,7 @@ def embedding():
     embeddings of each document in `documents`."""
     documents = bottle.request.json["documents"]
     embeddings = [no_batch_embed(document) for document in documents]
-    return {"embeddings": embeddings.tolist()}
+    return {"embeddings": embeddings}
 
 
 @bottle.post('/semantic_search')
