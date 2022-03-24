@@ -78,4 +78,4 @@ def semantic_search():
     scores = util.dot_score(query_embedding, document_embeddings).squeeze()
     return {"similarities": [float(s) for s in scores]}
 
-bottle.run(port=args.port)
+bottle.run(port=args.port, server="cheroot")
